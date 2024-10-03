@@ -2,7 +2,7 @@
 name = "bw_http_forwarder"
 version = "0.1.0"
 authors = ["Ezro"]
-edition = "2024"
+edition = "2021"
 
 [dependencies]
 axum = { version = "0.7.7" }

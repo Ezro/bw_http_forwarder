@@ -23,15 +23,11 @@ jobs:
       run: |
         rustup update ${{ matrix.toolchain }}
         rustup default ${{ matrix.toolchain }}
-        rustup toolchain install ${{ matrix.toolchain }}-aarch64-apple-darwin
         rustup target add x86_64-pc-windows-gnu
-        rustup target add x86_64-apple-darwin
     - name: Build for Linux (Release)
       run: cargo build --release
     - name: Build for Windows (Release)
       run: cargo build --release --target x86_64-pc-windows-gnu
-    - name: Build for Apple Darwin (Release)
-      run: cargo build --release --target x86_64-apple-darwin
     - name: Run tests
       run: cargo test --verbose
     - name: Set short SHA
@@ -44,7 +40,6 @@ jobs:
         mkdir release
         zip -r release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-linux-x86_64.zip target/release/bw_http_forwarder
         zip -r release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86-64.zip target/x86_64-pc-windows-gnu/bw_http_forwarder.exe
-        zip -r release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-apple-darwin-x86-64.zip target/x86_64-apple-darwin/release/bw_http_forwarder
     - name: Release Binaries
       uses: softprops/action-gh-release@v2
       with:
@@ -52,5 +47,37 @@ jobs:
         files: |
           release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-linux-x86_64.zip
           release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86-64.zip
-          release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-apple-darwin-x86-64.zip
+  CI-CD-Mac:
+    permissions: write-all
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        toolchain:
+          - stable
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Rust toolchain
+      run: |
+        rustup update ${{ matrix.toolchain }}
+        rustup default ${{ matrix.toolchain }}
+        rustup toolchain install ${{ matrix.toolchain }}-aarch64-apple-darwin
+        rustup target add aarch64-apple-darwin
+    - name: Build for Apple Darwin (Release)
+      run: cargo build --release --target aarch64-apple-darwin
+    - name: Run tests
+      run: cargo test --verbose
+    - name: Set short SHA
+      id: vars
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+    - name: Package and Upload Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        mkdir release
+        zip -r release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-apple-darwin-x86-64.zip target/x86_64-apple-darwin/release/bw_http_forwarder
+    - name: Release Binaries
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ steps.vars.outputs.sha_short }}
+        files: release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-apple-darwin-x86-64.zip
         

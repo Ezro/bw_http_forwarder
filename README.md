@@ -13,3 +13,13 @@ A simple tool to forward the internal HTTP server in a Brood War client to a har
 3) git clone bw_http_forwarder
 4) `cd bw_http_forwarder`
 5) `cargo build` or `cargo run`
+
+## Testing the tool
+While the tool is running, you should be able to make simple GET calls via your favorite tool (browser, postman, curl, etc.) with your StarCraft running.
+
+Here is a snippet I captured using Fiddler while scrubbing logging in and scrubbing around online:
+![Fiddler snippet](https://raw.githubusercontent.com/Ezro/bw_http_forwarder/refs/heads/main/fiddler_snippet.png)
+
+These calls appear to be directly available from the main menu as long as you're connected to Battle.net.
+
+Enjoy.

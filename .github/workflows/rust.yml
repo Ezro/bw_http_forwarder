@@ -44,4 +44,4 @@ jobs:
     - name: Release Binaries
       uses: softprops/action-gh-release@v1
       with:
-        tag: ${{ github.ref }}
+        tag_name: ${{ steps.vars.outputs.sha_short }}

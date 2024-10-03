@@ -31,11 +31,12 @@ jobs:
       run: cargo test --verbose
     - name: Package Release
       run: |
-        cp target/release/bw_http_forwarder release/bw_http_forwarder-v${{ github.ref }}
-        cp target/x86_64-pc-windows-gnu/release/bw_http_forwarder.exe release/bw_http_forwarder-v${{ github.ref }}.exe
+        mkdir release
+        cp target/release/bw_http_forwarder release/bw_http_forwarder-v${{ github.sha }}
+        cp target/x86_64-pc-windows-gnu/release/bw_http_forwarder.exe release/bw_http_forwarder-v${{ github.sha }}.exe
         cd release
-        zip -r bw_http_forwarder-v${{ github.ref }} bw_http_forwarder-v${{ github.ref }}-linux-x86_64.zip
-        zip -r bw_http_forwarder-v${{ github.ref }}-windows-x86-64.exe bw_http_forwarder-v${{ github.ref }}-windows-x86-64.zip
+        zip -r bw_http_forwarder-v${{ github.sha }} bw_http_forwarder-v${{ github.sha }}-linux-x86_64.zip
+        zip -r bw_http_forwarder-v${{ github.sha }}-windows-x86-64.exe bw_http_forwarder-v${{ github.sha }}-windows-x86-64.zip
         cd ..
     - name: Release Binaries
       uses: softprops/action-gh-release@v1

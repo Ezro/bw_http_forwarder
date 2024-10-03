@@ -97,7 +97,7 @@ async fn get_open_ports(pid: u32) -> HashSet<u16> {
 async fn find_working_port(ports: HashSet<u16>) -> Option<u16> {
     let client = Client::new();
     for port in ports {
-        let url = format!("http://127.0.0.1:{}/panel/ChatPanel/1", port);
+        let url = format!("http://127.0.0.1:{}/panel/ChatPanel/Throw404", port);
         let response = client
             .get(&url)
             .timeout(Duration::from_millis(50))

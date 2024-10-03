@@ -29,14 +29,17 @@ jobs:
       run: cargo build --target x86_64-pc-windows-gnu --release
     - name: Run tests
       run: cargo test --verbose
+    - name: Set short SHA
+      id: vars
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
     - name: Package Release
       run: |
         mkdir release
-        cp target/release/bw_http_forwarder release/bw_http_forwarder-v${{ github.sha }}
-        cp target/x86_64-pc-windows-gnu/release/bw_http_forwarder.exe release/bw_http_forwarder-v${{ github.sha }}.exe
+        cp target/release/bw_http_forwarder release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}
+        cp target/x86_64-pc-windows-gnu/release/bw_http_forwarder.exe release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}.exe
         cd release
-        zip -r bw_http_forwarder-v${{ github.sha }} bw_http_forwarder-v${{ github.sha }}-linux-x86_64.zip
-        zip -r bw_http_forwarder-v${{ github.sha }}-windows-x86-64.exe bw_http_forwarder-v${{ github.sha }}-windows-x86-64.zip
+        zip -r bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-linux-x86_64.zip bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}
+        zip -r bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86-64.zip bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}.exe
         cd ..
     - name: Release Binaries
       uses: softprops/action-gh-release@v1

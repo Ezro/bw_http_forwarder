@@ -33,7 +33,9 @@ jobs:
     - name: Set short SHA
       id: vars
       run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-    - name: Package Release
+    - name: Package and Upload Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         mkdir release
         cp target/release/bw_http_forwarder release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}
@@ -41,11 +43,6 @@ jobs:
         cd release
         zip -r bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-linux-x86_64.zip bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}
         zip -r bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86-64.zip bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}.exe
-        cd ..
-    - name: Upload Release Assets
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        cd release
         gh release upload ${{ steps.vars.outputs.sha_short }} bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-linux-x86_64.zip
         gh release upload ${{ steps.vars.outputs.sha_short }} bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86-64.zip
+        cd ..

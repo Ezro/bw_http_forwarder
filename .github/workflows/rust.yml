@@ -38,7 +38,7 @@ jobs:
     - name: Package Linux Release
       run: |
         mkdir -p release
-        cp target/release/my_project_name release/bw_http_forwarder-v${{ github.ref }}-linux-amd64.zip
+        cp target/release/bw_http_forwarder release/bw_http_forwarder-v${{ github.ref }}-linux-amd64.zip
         cd release
         zip -r bw_http_forwarder-v${{ github.ref }}-linux-amd64.zip bw_http_forwarder-v${{ github.ref }}-linux-amd64
         cd ..
@@ -46,7 +46,7 @@ jobs:
     - name: Package Windows Release
       run: |
         mkdir -p release
-        cp target/x86_64-pc-windows-gnu/release/my_project_name.exe release/bw_http_forwarder-v${{ github.ref }}-windows-amd64.zip
+        cp target/x86_64-pc-windows-gnu/release/bw_http_forwarder.exe release/bw_http_forwarder-v${{ github.ref }}-windows-amd64.zip
         cd release
         zip -r bw_http_forwarder-v${{ github.ref }}-windows-amd64.zip bw_http_forwarder-v${{ github.ref }}-windows-amd64
         cd ..

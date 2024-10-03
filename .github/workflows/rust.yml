@@ -8,52 +8,36 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  setup:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain:
+          - stable
     steps:
-      - uses: actions/checkout@v4
-      - name: Install MinGW
-        run: sudo apt-get install -y mingw-w64
-      - name: Set up Rust toolchain
-        run: |
-          rustup update stable
-          rustup default stable
-          rustup target add x86_64-pc-windows-gnu
-  build_linux:
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build for Linux (Release)
-        run: cargo build --release
-  build_windows:
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build for Windows (Release)
-        run: cargo build --target x86_64-pc-windows-gnu --release
-  test:
-    runs-on: ubuntu-latest
-    needs: [build_linux, build_windows]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run tests
-        run: cargo test --verbose
-  deploy:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Package Release
-        run: |
-          mkdir -p release
-          cp target/release/bw_http_forwarder release/bw_http_forwarder-v${{ github.ref }}
-          cp target/x86_64-pc-windows-gnu/release/bw_http_forwarder.exe release/bw_http_forwarder-v${{ github.ref }}.exe
-          cd release
-          zip -r bw_http_forwarder-v${{ github.ref }} bw_http_forwarder-v${{ github.ref }}-linux-x86_64.zip
-          zip -r bw_http_forwarder-v${{ github.ref }}-windows-x86-64.exe bw_http_forwarder-v${{ github.ref }}-windows-x86-64.zip
-          cd ..
-      - name: Release Binaries
-        uses: softprops/action-gh-release@v1
-        with:
-          tag: ${{ github.ref }}
+    - uses: actions/checkout@v4
+    - name: Install MinGW
+      run: sudo apt-get install -y mingw-w64
+    - name: Set up Rust toolchain
+      run: |
+        rustup update ${{ matrix.toolchain }}
+        rustup default ${{ matrix.toolchain }}
+        rustup target add x86_64-pc-windows-gnu
+    - name: Build for Linux (Release)
+      run: cargo build --release
+    - name: Build for Windows (Release)
+      run: cargo build --target x86_64-pc-windows-gnu --release
+    - name: Run tests
+      run: cargo test --verbose
+    - name: Package Release
+      run: |
+        cp target/release/bw_http_forwarder release/bw_http_forwarder-v${{ github.ref }}
+        cp target/x86_64-pc-windows-gnu/release/bw_http_forwarder.exe release/bw_http_forwarder-v${{ github.ref }}.exe
+        cd release
+        zip -r bw_http_forwarder-v${{ github.ref }} bw_http_forwarder-v${{ github.ref }}-linux-x86_64.zip
+        zip -r bw_http_forwarder-v${{ github.ref }}-windows-x86-64.exe bw_http_forwarder-v${{ github.ref }}-windows-x86-64.zip
+        cd ..
+    - name: Release Binaries
+      uses: softprops/action-gh-release@v1
+      with:
+        tag: ${{ github.ref }}

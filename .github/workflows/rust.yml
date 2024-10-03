@@ -8,7 +8,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  CI-CD:
     permissions: write-all
     runs-on: ubuntu-latest
     strategy:
@@ -42,7 +42,10 @@ jobs:
         zip -r bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-linux-x86_64.zip bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}
         zip -r bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86-64.zip bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}.exe
         cd ..
-    - name: Release Binaries
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: ${{ steps.vars.outputs.sha_short }}
+    - name: Upload Release Assets
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        cd release
+        gh release upload ${{ steps.vars.outputs.sha_short }} bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-linux-x86_64.zip
+        gh release upload ${{ steps.vars.outputs.sha_short }} bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86-64.zip

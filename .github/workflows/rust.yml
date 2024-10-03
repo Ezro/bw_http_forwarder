@@ -25,7 +25,7 @@ jobs:
         rustup default ${{ matrix.toolchain }}
         rustup toolchain install ${{ matrix.toolchain }}-aarch64-apple-darwin
         rustup target add x86_64-pc-windows-gnu
-        rustup target add aarch64-apple-darwin
+        rustup target add x86_64-apple-darwin
     - name: Build for Linux (Release)
       run: cargo build --release
     - name: Build for Windows (Release)
@@ -44,7 +44,7 @@ jobs:
         mkdir release
         zip -r release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-linux-x86_64.zip target/release/bw_http_forwarder
         zip -r release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86-64.zip target/x86_64-pc-windows-gnu/bw_http_forwarder.exe
-        zip -r release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-apple-darwin-x86-64.zip target/aarch64-apple-darwin/release/bw_http_forwarder
+        zip -r release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-apple-darwin-x86-64.zip target/x86_64-apple-darwin/release/bw_http_forwarder
     - name: Release Binaries
       uses: softprops/action-gh-release@v2
       with:

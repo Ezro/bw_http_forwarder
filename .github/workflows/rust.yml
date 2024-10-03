@@ -39,14 +39,14 @@ jobs:
       run: |
         mkdir release
         zip -j release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-linux-x86_64.zip target/release/bw_http_forwarder
-        zip -j release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86-64.zip target/x86_64-pc-windows-gnu/release/bw_http_forwarder.exe
+        zip -j release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86_64.zip target/x86_64-pc-windows-gnu/release/bw_http_forwarder.exe
     - name: Release Binaries
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ steps.vars.outputs.sha_short }}
         files: |
           release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-linux-x86_64.zip
-          release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86-64.zip
+          release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86_64.zip
   CI-CD-Mac:
     permissions: write-all
     runs-on: macos-latest
@@ -72,10 +72,10 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         mkdir release
-        zip -j release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-apple-darwin-x86-64.zip target/release/bw_http_forwarder
+        zip -j release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-apple-darwin-x86_64.zip target/release/bw_http_forwarder
     - name: Release Binaries
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ steps.vars.outputs.sha_short }}
-        files: release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-apple-darwin-x86-64.zip
+        files: release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-apple-darwin-x86_64.zip
         

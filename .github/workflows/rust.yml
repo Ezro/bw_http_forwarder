@@ -24,10 +24,13 @@ jobs:
         rustup update ${{ matrix.toolchain }}
         rustup default ${{ matrix.toolchain }}
         rustup target add x86_64-pc-windows-gnu
+        rustup target add aarch64-apple-darwin
     - name: Build for Linux (Release)
       run: cargo build --release
     - name: Build for Windows (Release)
       run: cargo build --target x86_64-pc-windows-gnu --release
+    - name: Build for Apple Darwin (Release)
+      run: cargo build --target aarch64-apple-darwin --release
     - name: Run tests
       run: cargo test --verbose
     - name: Set short SHA
@@ -38,12 +41,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         mkdir release
-        cp target/release/bw_http_forwarder release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}
-        cp target/x86_64-pc-windows-gnu/release/bw_http_forwarder.exe release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}.exe
-        cd release
-        zip -r bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-linux-x86_64.zip bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}
-        zip -r bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86-64.zip bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}.exe
-        cd ..
+        zip -r release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-linux-x86_64.zip target/release/bw_http_forwarder
+        zip -r release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86-64.zip target/x86_64-pc-windows-gnu/bw_http_forwarder.exe
+        zip -r release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-apple-darwin-x86-64.zip target/aarch64-apple-darwin/release/bw_http_forwarder
     - name: Release Binaries
       uses: softprops/action-gh-release@v2
       with:
@@ -51,4 +51,5 @@ jobs:
         files: |
           release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-linux-x86_64.zip
           release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-windows-x86-64.zip
+          release/bw_http_forwarder-v${{ steps.vars.outputs.sha_short }}-apple-darwin-x86-64.zip
         

@@ -11,7 +11,6 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -19,6 +18,7 @@ jobs:
           - stable
     steps:
     - uses: actions/checkout@v4
+    - run: sudo apt-get install mingw-w64
     - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
     - run: rustup target add x86_64-pc-windows-gnu
     - name: Build

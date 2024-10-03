@@ -129,7 +129,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "79296716171880943b8470b5f8d03aa55eb2e645a4874bdbb28adb49162e012c"
 
 [[package]]
-name = "bw_mm_info_server"
+name = "bw_http_forwarder"
 version = "0.1.0"
 dependencies = [
  "axum",

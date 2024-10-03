@@ -77,9 +77,7 @@ async fn get_open_ports(pid: u32) -> HashSet<u16> {
             .filter_map(|line| {
                 let segments: Vec<&str> = line.trim().split_whitespace().collect();
                 if segments.len() > 0 {
-                    // On Unix, the port will be in the format `127.0.0.1:port`
                     if let Some(local_address) = segments.get(8) {
-                        // Adjust index as necessary
                         let port_str = local_address.split(':').last()?;
                         port_str.parse::<u16>().ok()
                     } else {
